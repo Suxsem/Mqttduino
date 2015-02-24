@@ -2,6 +2,20 @@
 
 ###An MQTT client for Arduinos connected to an esp8266 board
 
+# **FEATURES** #
+- Subscribe to topic
+- Send messages
+- Receive messages
+- All qos levels
+- Messages retain
+- Authentication with username and password
+- Last will and testament (in topic [mqtt id]/status)
+- Auto reconnect on wifi drop or mqtt broker drop!
+- VERY easy to use, low memory footprint
+- (TODO) SSL connection
+
+# **USAGE** #
+
 <br />
 # 1) Connect esp8266 to Arduino
 DISCLAIMER! I have NOT much experience in electronics, this is MY connection diagram and it's working well for me, but I don't know if it's 100% correct<br />
