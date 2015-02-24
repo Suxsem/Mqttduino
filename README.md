@@ -22,3 +22,22 @@ Don't forget to reboot the esp8266 after copying files
 # 4) The Arduino sketch
 The mqttduino.ino is a template for your sketch.<br />
 The template is self-explanatory
+
+# WARNING!
+1) I suggest to increate the Arduino serial buffer size in
+```C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\HardwareSerial.h```
+adding
+```
+#define SERIAL_TX_BUFFER_SIZE 100
+#define SERIAL_RX_BUFFER_SIZE 100
+```
+under
+```
+...
+#define SERIAL_TX_BUFFER_SIZE 64
+#define SERIAL_RX_BUFFER_SIZE 64
+#endif
+#endif
+```
+<br />
+2) The script CAN'T receive messages or topics that contains the | character because it's used internally as a separator. Please don't use this character in topics or messages
