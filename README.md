@@ -20,7 +20,7 @@
 ### 1) Connect esp8266 to Arduino
 DISCLAIMER! I have NOT much experience in electronics, this is MY connection diagram and it's working well for me, but I don't know if it's 100% correct<br />
 <br />
-![Connection diagram](http://i.imgur.com/7uIHUzb.png)
+![Connection diagram](electrical_connections/connect_to_arduino.png?raw=true)
 
 ### 2) Install nodemcu lua firmware on esp8266
 I'm using 20150213 version, you can use any version from 20150212, hoping that future releases will not break compatibility with the script<br />
