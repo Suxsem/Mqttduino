@@ -10,7 +10,7 @@
 #define MQTTqos				2						//quality of service for subscriptions and publishes
 #define timeout_check		500						//timeout for checking incoming messages (milliseconds)
 #define timeout_send		5000					//timeout for subscriptions and publishes (milliseconds)
-#define esp8266reset		2						//arduino pin connected to esp8266 reset pin
+#define esp8266reset		A5						//arduino pin connected to esp8266 reset pin (analog pin suggested due to higher impedance)
 #define esp8266alive		40						//esp8266 keep alive interval (reset board if fail) (seconds)
 boolean connected = false;
 unsigned long lastAliveCheck;
