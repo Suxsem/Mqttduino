@@ -5,16 +5,18 @@
 #define MQTTport			1883					//port of the mqtt broker
 #define MQTTuser			"client1"				//username of this mqtt client
 #define MQTTpsw				"password1"				//password of this mqtt client
-#define MQTTalive			120						//keep alive interval (seconds)
+#define MQTTalive			120						//mqtt keep alive interval (seconds)
 #define MQTTretry			10						//time to wait before reconnect if connection drops (seconds)
 #define MQTTqos				2						//quality of service for subscriptions and publishes
 #define timeout_check		500						//timeout for checking incoming messages (milliseconds)
 #define timeout_send		5000					//timeout for subscriptions and publishes (milliseconds)
-
+#define esp8266reset		2						//arduino pin connected to esp8266 reset pin
+#define esp8266alive		40						//esp8266 keep alive interval (reset board if fail) (seconds)
 boolean connected = false;
+unsigned long lastAliveCheck;
 
 void onConnected() {	//on connected callback
-	mqttSubscribe("hello");	//subscribe to "hello" topic	
+	mqttSubscribe("hello");	//subscribe to "hello" topic
 }
 
 void onDisconnected() {	//on disconnected callback
@@ -29,6 +31,12 @@ char in_buffer[buffer_l + 1];
 char cb[1];
 boolean success;
 void checkComm() {
+	if (millis() - lastAliveCheck > esp8266alive * 2) {
+		pinMode(esp8266reset, OUTPUT);
+		delay(10);
+		pinMode(esp8266reset, INPUT);
+		lastAliveCheck = millis();
+	}
 	if (Serial.find("[(")) {
 		Serial.readBytes(cb, 1);
 		if (cb[0] == 'r') {
@@ -37,8 +45,11 @@ void checkComm() {
 			if (connected) {
 				connected = false;
 				onDisconnected();
-			}			
-			Serial.println("connectAP(\"" + String(APssid) + "\", \"" + String(APpsw) + "\")");		
+			}
+            Serial.println("startAlive(\"" + String(esp8266alive) + "\")");			
+			Serial.println("connectAP(\"" + String(APssid) + "\", \"" + String(APpsw) + "\")");
+		} else if (cb[0] == 'a') {
+				lastAliveCheck = millis();
 		} else if (cb[0] == 'w') {
 			//wifi connected
 			Serial.println("mqttInit(\"" + String(MQTTid) + "\", \"" + String(MQTTip) + "\", " + MQTTport + ", \"" + String(MQTTuser)
@@ -69,29 +80,38 @@ void checkComm() {
 }
 void mqttPublish(String topic, String message, unsigned int retain) {
   	success = false;
-        while (!success) {
-        	Serial.println("mqttPublish(\"" + topic + "\", \"" + message + "\",  " + MQTTqos + ", " + retain + ")");
-        	Serial.setTimeout(timeout_send);
-        	checkComm();
-        	Serial.setTimeout(timeout_check);
-        }
+	Serial.setTimeout(timeout_send);
+	while (!success) {
+			if (!connected) {
+			  success = true;
+			  break;
+			}
+		Serial.println("mqttPublish(\"" + topic + "\", \"" + message + "\",  " + MQTTqos + ", " + retain + ")");        	
+		checkComm();
+	}
+	Serial.setTimeout(timeout_check);        
 }
 void mqttSubscribe(String topic) {
 	success = false;
-        while(!success) {
-	        Serial.println("mqttSubscribe(\"" + String(topic) + "\", " + MQTTqos + ")");
-        	Serial.setTimeout(timeout_send);
-	        checkComm();
-        	Serial.setTimeout(timeout_check);
-        }
+	Serial.setTimeout(timeout_send);
+	while(!success) {
+			if (!connected) {
+			  success = true;
+			  break;
+			}
+		Serial.println("mqttSubscribe(\"" + String(topic) + "\", " + MQTTqos + ")");
+		checkComm();
+	}
+	Serial.setTimeout(timeout_check);        
 }
 #### END OF UNTOUCHABLE CODE ####
 
 void setup() {
 	Serial.begin(9600);	//start serial
-  
-	while(!connected)	//
-		checkComm();	//wait for connection
+
+	lastAliveCheck = millis();	//
+	while(!connected)			//
+		checkComm();			//wait for first connection
 }
 
 void loop() {

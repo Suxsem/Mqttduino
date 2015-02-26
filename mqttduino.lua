@@ -7,7 +7,7 @@ mqttPort = 0
 mqttRetry = 0
 mqttId = ""
 
-srv = net.createServer(net.TCP)
+local srv = net.createServer(net.TCP)
 srv:listen(80, function(conn) 
 	conn:on("receive",function(conn,payload)
 		conn:send("MQTTDUINO - Node ID: " .. node.chipid() ..
@@ -18,7 +18,7 @@ srv:listen(80, function(conn)
 	conn:on("sent",function(conn) conn:close() end)
 end)
 
-function mqttInit(id, ip, port, user, password, alive, retry)
+mqttInit = function (id, ip, port, user, password, alive, retry)
 	mqttId = id;
 	mqttIp = ip
 	mqttPort = port
@@ -49,7 +49,7 @@ function mqttInit(id, ip, port, user, password, alive, retry)
 	mqttConnect()
 end
 
-function mqttConnect()
+mqttConnect = function ()
 	m:connect(mqttIp, mqttPort, 0, function(conn)
 		m:publish(mqttId .. "/status", "1", 2, 1, function(conn)
 				print("[(c")
@@ -58,15 +58,15 @@ function mqttConnect()
 	end)
 end
 
-function mqttSubscribe(topic, qos)
+mqttSubscribe = function (topic, qos)
 	m:subscribe(topic, qos, function(conn) print("[(s") end)
 end
 
-function mqttPublish(topic, message, qos, ret)
+mqttPublish = function (topic, message, qos, ret)
 	m:publish(topic, message, qos, ret, function(conn) print("[(p") end)
 end
 
-function connectAP(ssid, password)
+connectAP = function (ssid, password)
 	wifi.setmode(wifi.STATION)
 	wifi.sta.config(ssid, password)
 	tmr.alarm(0, 1000, 1, function()
@@ -75,6 +75,12 @@ function connectAP(ssid, password)
 			print("[(w");
 		end
 	end)	
+end
+
+startAlive = function (interval)
+	tmr.alarm(1, interval * 1000, 1, function()
+		print("[(a")
+	end)
 end
 
 tmr.alarm(0, 10000, 1, function()

@@ -12,8 +12,9 @@
 - Authentication with username and password
 - Last will and testament (in topic [mqtt id]/status)
 - Auto reconnect on wifi drop or mqtt broker drop!
-- VERY easy to use, low memory footprint
-- (TODO) SSL connection
+- Auto reset esp8266 on lock up!
+- VERY easy to use and reliable, low memory footprint
+- (TODO) SSL connection (can't do it for now due to memory constraint of nodemcu firmware)
 
 # **USAGE**
 
