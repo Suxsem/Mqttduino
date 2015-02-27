@@ -31,7 +31,7 @@ char in_buffer[buffer_l + 1];
 char cb[1];
 boolean success;
 void checkComm() {
-	if (millis() - lastAliveCheck > esp8266alive * 2) {
+	if (millis() - lastAliveCheck > esp8266alive * 2000) {
 		pinMode(esp8266reset, OUTPUT);
 		delay(10);
 		pinMode(esp8266reset, INPUT);
