@@ -13,7 +13,6 @@
 #define esp8266reset        A5                      //arduino pin connected to esp8266 reset pin (analog pin suggested due to higher impedance)
 #define esp8266alive        40                      //esp8266 keep alive interval (reset board if fail) (seconds)
 boolean connected = false;
-unsigned long lastAliveCheck;
 
 void onConnected() {                                //on connected callback
     mqttSubscribe("hello");                         //subscribe to "hello" topic
@@ -30,8 +29,9 @@ void onMessage(String topic, String message) {      //new message callback
 char in_buffer[buffer_l + 1];
 char cb[1];
 boolean success;
+unsigned long lastAliveCheck = 0;
 void checkComm() {
-    if (millis() - lastAliveCheck > esp8266alive * 2000) {
+    if (millis() - lastAliveCheck > esp8266alive * 2000UL || lastAliveCheck == 0) {
         pinMode(esp8266reset, OUTPUT);
         delay(10);
         pinMode(esp8266reset, INPUT);
@@ -46,7 +46,8 @@ void checkComm() {
                 connected = false;
                 onDisconnected();
             }
-            Serial.println("startAlive(\"" + String(esp8266alive) + "\")");         
+            lastAliveCheck = millis();            
+            Serial.println("startAlive(" + String(esp8266alive) + ")");         
             Serial.println("connectAP(\"" + String(APssid) + "\", \"" + String(APpsw) + "\")");
         } else if (cb[0] == 'a') {
             lastAliveCheck = millis();
@@ -109,7 +110,6 @@ void mqttSubscribe(String topic) {
 void setup() {
     Serial.begin(9600);                                 //start serial
 
-    lastAliveCheck = millis();                          //
     while(!connected)                                   //
         checkComm();                                    //wait for first connection
 }
