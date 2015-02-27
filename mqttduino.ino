@@ -25,7 +25,7 @@ void onDisconnected() {                             //on disconnected callback
 void onMessage(String topic, String message) {      //new message callback
 }
 
-/*  ####    DO NOT TOUCH THIS CODE! ####    */
+//  ####    DO NOT TOUCH THIS CODE!    ####
 #define buffer_l 50
 char in_buffer[buffer_l + 1];
 char cb[1];
@@ -104,7 +104,7 @@ void mqttSubscribe(String topic) {
     }
     Serial.setTimeout(timeout_check);        
 }
-/*  ####    END OF UNTOUCHABLE CODE    ####   */
+//  ####    END OF UNTOUCHABLE CODE    ####
 
 void setup() {
     Serial.begin(9600);                                 //start serial
