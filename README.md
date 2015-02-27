@@ -4,7 +4,7 @@
 <br />
 
 # **FEATURES**
-- Subscribe to topic
+- Subscribe to topics
 - Send messages
 - Receive messages
 - All qos levels
@@ -39,7 +39,7 @@ The mqttduino.ino is a template for your sketch.<br />
 The template is self-explanatory
 
 # WARNING!
-1) I suggest to increate the Arduino serial buffer size in
+- I suggest to increate the Arduino serial buffer size in
 ```C:\Program Files (x86)\Arduino\hardware\arduino\avr\cores\arduino\HardwareSerial.h```
 adding
 ```
@@ -55,4 +55,4 @@ under
 #endif
 ```
 <br />
-2) The script CAN'T receive messages or topics that contains the | character because it's used internally as a separator. Please don't use this character in topics or messages
+- The script CAN'T receive messages or topics that contains the | character because it's used internally as a separator. Please don't use this character in topics or messages
