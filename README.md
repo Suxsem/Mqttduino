@@ -13,7 +13,7 @@
 - Last will and testament (in topic [mqtt id]/status)
 - Auto reconnect on wifi drop or mqtt broker drop!
 - Auto reset esp8266 on lock up!
-- VERY easy to use and reliable, low memory footprint
+- VERY easy to use, low memory footprint
 - (TODO) SSL connection (can't do it for now due to memory constraint of nodemcu firmware)
 
 # **USAGE**
@@ -55,4 +55,5 @@ under
 #endif
 ```
 <br />
-- The script CAN'T receive messages or topics that contains the | character because it's used internally as a separator. Please don't use this character in topics or messages
+- The script CAN'T receive messages or topics that contains the | character because it's used internally as a separator. Please don't use this character in topics or messages.
+- The script have a messages queue of 1: if the Arduino is processing a message, subscribing to a topic or publishing a message, only one message will be queued. (Due to memory constraint)
