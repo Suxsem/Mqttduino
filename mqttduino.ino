@@ -49,7 +49,7 @@ void checkComm() {
             Serial.println("startAlive(\"" + String(esp8266alive) + "\")");         
             Serial.println("connectAP(\"" + String(APssid) + "\", \"" + String(APpsw) + "\")");
         } else if (cb[0] == 'a') {
-                lastAliveCheck = millis();
+            lastAliveCheck = millis();
         } else if (cb[0] == 'w') {
             //wifi connected
             Serial.println("mqttInit(\"" + String(MQTTid) + "\", \"" + String(MQTTip) + "\", " + MQTTport + ", \"" + String(MQTTuser)
@@ -70,8 +70,8 @@ void checkComm() {
             memset(in_buffer, 0, sizeof(in_buffer));
             Serial.readBytesUntil('|', in_buffer, buffer_l);
             String message = String(in_buffer);
-                        while(!success)
-                          checkComm();
+            while(!success)
+                checkComm();
             onMessage(topic, message);
         } else if (cb[0] == 'p' || cb[0] == 's') {
             success = true;
@@ -82,10 +82,10 @@ void mqttPublish(String topic, String message, unsigned int retain) {
     success = false;
     Serial.setTimeout(timeout_send);
     while (!success) {
-            if (!connected) {
-              success = true;
-              break;
-            }
+        if (!connected) {
+            success = true;
+            break;
+        }
         Serial.println("mqttPublish(\"" + topic + "\", \"" + message + "\",  " + MQTTqos + ", " + retain + ")");            
         checkComm();
     }
@@ -95,10 +95,10 @@ void mqttSubscribe(String topic) {
     success = false;
     Serial.setTimeout(timeout_send);
     while(!success) {
-            if (!connected) {
-              success = true;
-              break;
-            }
+        if (!connected) {
+            success = true;
+            break;
+        }
         Serial.println("mqttSubscribe(\"" + String(topic) + "\", " + MQTTqos + ")");
         checkComm();
     }
