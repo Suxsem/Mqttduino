@@ -115,7 +115,7 @@ void mqttSubscribe(String topic) {
 //  ####    END OF UNTOUCHABLE CODE    ####
 
 void setup() {
-    Serial.begin(9600);                                 //start
+    Serial.begin(9600);                                 //
     Serial.setTimeout(500)                              //start serial
 
     while(!connected)                                   //
@@ -130,5 +130,5 @@ void loop() {
     delay(10000);
     
     mqttPublish("uptime", String(millis()), 0);         //publish new message to "uptime" topic, with no retain
-    mqttPublish("sensor", String(analogRead(A0)), 0);   //publish new message to "sensor" topic, with retain
+    mqttPublish("sensor", String(analogRead(A0)), 1);   //publish new message to "sensor" topic, with retain
 }
