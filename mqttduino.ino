@@ -47,15 +47,18 @@ void checkComm() {
                 onDisconnected();
             }
             lastAliveCheck = millis();            
-            Serial.println("startAlive(" + String(esp8266alive) + ")");         
+            Serial.println("startAlive(" + String(esp8266alive) + ")");
+            Serial.flush();
             Serial.println("connectAP(\"" + String(APssid) + "\", \"" + String(APpsw) + "\")");
+            Serial.flush();
         } else if (cb[0] == 'a') {
             lastAliveCheck = millis();
             checkComm();
         } else if (cb[0] == 'w') {
             //wifi connected
             Serial.println("mqttInit(\"" + String(MQTTid) + "\", \"" + String(MQTTip) + "\", " + MQTTport + ", \"" + String(MQTTuser)
-                            + "\", \"" + String(MQTTpsw) + "\", " + MQTTalive + ", " + MQTTretry + ")");        
+                            + "\", \"" + String(MQTTpsw) + "\", " + MQTTalive + ", " + MQTTretry + ")");
+            Serial.flush();
         } else if (cb[0] == 'c') {
             //mqtt connected
             connected = true;
@@ -98,6 +101,7 @@ void mqttPublish(String topic, String message, unsigned int retain) {
         return;
     success = false;
     Serial.println("mqttPublish(\"" + topic + "\", \"" + message + "\",  " + MQTTqos + ", " + retain + ")");                
+    Serial.flush();
     waitForSuccess();
 }
 void mqttSubscribe(String topic) {
@@ -105,6 +109,7 @@ void mqttSubscribe(String topic) {
         return;
     success = false;
     Serial.println("mqttSubscribe(\"" + String(topic) + "\", " + MQTTqos + ")");
+    Serial.flush();
     waitForSuccess();
 }
 //  ####    END OF UNTOUCHABLE CODE    ####
