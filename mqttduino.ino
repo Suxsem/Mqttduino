@@ -96,7 +96,7 @@ void waitForSuccess() {
         checkComm();
     }
 }
-void mqttPublish(String topic, String message, unsigned int retain) {
+void mqttPublish(String topic, String message, byte retain) {
     if (!connected)
         return;
     success = false;
