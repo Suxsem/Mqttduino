@@ -71,7 +71,8 @@ void checkComm() {
             //new message
             if (messageQueued)
                 return;
-            messageQueued = true;
+            if (!success)
+                messageQueued = true;
             memset(in_buffer, 0, sizeof(in_buffer));
             Serial.readBytesUntil('|', in_buffer, buffer_l);
             String topic = String(in_buffer);

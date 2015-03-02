@@ -56,4 +56,4 @@ under
 ```
 <br />
 - The script CAN'T receive messages or topics that contains the | character because it's used internally as a separator. Please don't use this character in topics or messages.
-- The script have a messages queue of 1: if the Arduino is processing a message, subscribing to a topic or publishing a message, only one message will be queued. (Due to memory constraint)
+- When the Arduino is subscribing to a topic or publishing a message, only one message will be queued. (Due to memory constraint)
