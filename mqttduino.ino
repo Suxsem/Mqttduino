@@ -10,6 +10,7 @@
 #define MQTTqos             2                       //quality of service for subscriptions and publishes
 #define esp8266reset        A5                      //arduino pin connected to esp8266 reset pin (analog pin suggested due to higher impedance)
 #define esp8266alive        40                      //esp8266 keep alive interval (reset board if fail) (seconds)
+#define esp8266Serial       Serial                  //Serial port to use to communicate to the esp8266 (Serial, Serial1, Serial2, etc)
 boolean connected = false;
 
 void onConnected() {                                //on connected callback
@@ -38,8 +39,8 @@ void checkComm() {
         lastAliveCheck = millis();
         connected = false;        
     }
-    if (Serial.find("[(")) {
-        Serial.readBytes(cb, 1);
+    if (esp8266Serial.find("[(")) {
+        esp8266Serial.readBytes(cb, 1);
         if (cb[0] == 'r') {
             //ready
             if (connected) {
@@ -47,18 +48,18 @@ void checkComm() {
                 onDisconnected();
             }
             lastAliveCheck = millis();            
-            Serial.println("startAlive(" + String(esp8266alive) + ")");
-            Serial.flush();
-            Serial.println("connectAP(\"" + String(APssid) + "\", \"" + String(APpsw) + "\")");
-            Serial.flush();
+            esp8266Serial.println("startAlive(" + String(esp8266alive) + ")");
+            esp8266Serial.flush();
+            esp8266Serial.println("connectAP(\"" + String(APssid) + "\", \"" + String(APpsw) + "\")");
+            esp8266Serial.flush();
         } else if (cb[0] == 'a') {
             lastAliveCheck = millis();
             checkComm();
         } else if (cb[0] == 'w') {
             //wifi connected
-            Serial.println("mqttInit(\"" + String(MQTTid) + "\", \"" + String(MQTTip) + "\", " + MQTTport + ", \"" + String(MQTTuser)
+            esp8266Serial.println("mqttInit(\"" + String(MQTTid) + "\", \"" + String(MQTTip) + "\", " + MQTTport + ", \"" + String(MQTTuser)
                             + "\", \"" + String(MQTTpsw) + "\", " + MQTTalive + ", " + MQTTretry + ")");
-            Serial.flush();
+            esp8266Serial.flush();
         } else if (cb[0] == 'c') {
             //mqtt connected
             connected = true;
@@ -74,10 +75,10 @@ void checkComm() {
             if (!success)
                 messageQueued = true;
             memset(in_buffer, 0, sizeof(in_buffer));
-            Serial.readBytesUntil('|', in_buffer, buffer_l);
+            esp8266Serial.readBytesUntil('|', in_buffer, buffer_l);
             String topic = String(in_buffer);
             memset(in_buffer, 0, sizeof(in_buffer));
-            Serial.readBytesUntil('|', in_buffer, buffer_l);
+            esp8266Serial.readBytesUntil('|', in_buffer, buffer_l);
             String message = String(in_buffer);
             waitForSuccess();
             onMessage(topic, message);
@@ -101,23 +102,23 @@ void mqttPublish(String topic, String message, byte retain) {
     if (!connected)
         return;
     success = false;
-    Serial.println("mqttPublish(\"" + topic + "\", \"" + message + "\",  " + MQTTqos + ", " + retain + ")");                
-    Serial.flush();
+    esp8266Serial.println("mqttPublish(\"" + topic + "\", \"" + message + "\",  " + MQTTqos + ", " + retain + ")");                
+    esp8266Serial.flush();
     waitForSuccess();
 }
 void mqttSubscribe(String topic) {
     if (!connected)
         return;
     success = false;
-    Serial.println("mqttSubscribe(\"" + String(topic) + "\", " + MQTTqos + ")");
-    Serial.flush();
+    esp8266Serial.println("mqttSubscribe(\"" + String(topic) + "\", " + MQTTqos + ")");
+    esp8266Serial.flush();
     waitForSuccess();
 }
 //  ####    END OF UNTOUCHABLE CODE    ####
 
 void setup() {
-    Serial.begin(9600);                                 //
-    Serial.setTimeout(500)                              //start serial
+    esp8266Serial.begin(9600);                                 //
+    esp8266Serial.setTimeout(500)                              //start serial
 
     while(!connected)                                   //
         checkComm();                                    //wait for first connection
